@@ -186,8 +186,10 @@ class SmartDemon(QtGui.QWidget):
 		self.plugins = self.plugin.plugins
 		for x in self.plugins:
 			Action = QtGui.QAction(QtGui.QIcon('Action.png'),x, self)
-			Action.triggered.connect(self.plugin.runPlugin)
 			self.popMenu.addAction(Action)
+			l = lambda x=x: self.plugin.runPlugin(x)
+			Action.triggered[()].connect(l)
+			self.connect(Action, QtCore.SIGNAL('triggered()'), l)
 ########################################
 #时钟类
 #向主类提供时钟API接口
@@ -252,8 +254,8 @@ class Platform(SmartDemon):
 				continue
 			self.plugins.append(filename)            #添加插件列表
 
-	def runPlugin(self, filename):
-		pluginName=os.path.splitext(filename)[0]
+	def runPlugin(self,fileName):
+		pluginName=os.path.splitext(fileName)[0]
 		plugin=__import__("plugins."+pluginName, fromlist=[pluginName])
 		clazz=plugin.getPluginClass()                    
 		o=clazz()

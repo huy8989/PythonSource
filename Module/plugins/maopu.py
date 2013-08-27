@@ -48,4 +48,7 @@ if __name__ == "__main__":
         print ('打卡成功 MP+5')
     else:
  		print('已经打卡')
+         
+def getPluginClass():
+    return Plugin
 
