@@ -1,27 +1,35 @@
 #coding:utf-8
 import os
+import sys,os,datetime
+from croniter import *
+import time
 
-def alert():
-	print('plugins working...................')
-    #输出重定向到日志文件
-	logfile=open("plugins/log.txt","a") 
-	#print("plugins working...................",file=logfile)    #python3.0
-	print >> logfile,"plugins working..................." 
-	logfile.close()
 
 class Plugin:
     def setPlatform(self, platform):
         self.platform=platform
 
     def start(self):
-        self.platform.sayHello("plugin")
-        alert()
+    	schedule = self.schedule()
+    	now = datetime.datetime.now()
+        itr = croniter(schedule,now)
+        next = itr.get_next(datetime.datetime)
+        while(True):
+			if(datetime.datetime.now()>next):
+				next = itr.get_next(datetime.datetime)
+				self.run()
+			time.sleep(1)
 
     def stop(self):
         self.platform.sayGoodbye("plugin")
+        
+    def run(self):
+	   pass
+	  
+    def schedule(self):
+        pass
 
 def getPluginClass():
     return Plugin
 
 
-alert()
